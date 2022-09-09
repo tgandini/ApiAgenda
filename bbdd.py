@@ -1,6 +1,5 @@
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import create_engine
-import psycopg2
 
 Base = declarative_base()
 from Models import Persona, Contacto
