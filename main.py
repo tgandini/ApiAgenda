@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+import bbdd
+
 
 app = FastAPI()
 
