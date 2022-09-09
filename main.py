@@ -16,13 +16,16 @@ class contactoJson (BaseModel):
 
 
 @app.get("/")
-async def root():
-    return {"message": "Hello World"}
+async def getAllPersonas():
+    try:
+        session = Session(bind=engine)
+        from Models.Persona import Persona
+        personas = session.query(Persona).all()
+        session.close()
+        return personas
+    except Exception as e:
+        return {"error": str(e)}
 
-#saludar con nombre y apellido
-@app.get("/saludar/{nombre}/{apellido}")
-async def saludar(nombre: str, apellido: str):
-    return {"message": f"Hola {nombre} {apellido}!! ¿Cómo estás?"}
 
 @app.put("/persona")
 async def crearPersona(persona: personaJson):
@@ -30,8 +33,8 @@ async def crearPersona(persona: personaJson):
         with Session(engine) as sesion:
             from Models.Persona import Persona
             
-            persona.nombre = persona.nombre.capitalize()
-            persona.apellido = persona.apellido.capitalize()
+            persona.nombre = persona.nombre.title()
+            persona.apellido = persona.apellido.title()
             personaDB = Persona(nombre=persona.nombre, apellido=persona.apellido)
             sesion.add(personaDB)            
             sesion.commit()
