@@ -20,7 +20,7 @@ async def getAllPersonas():
     try:
         session = Session(bind=engine)
         from Models.Persona import Persona
-        personas = session.query(Persona).all()
+        personas = session.query(Persona).filter(Persona.estaOculto == False).all()
         session.close()
         return personas
     except Exception as e:
@@ -54,8 +54,7 @@ async def getPersona(nombreOApellido):
     try:
         with Session(engine) as sesion:
             from Models.Persona import Persona
-            #find all personas with nombre or apellido like nombreOApellido case insensitive
-            personasDB = sesion.query(Persona).filter(Persona.nombre.ilike(f"%{nombreOApellido}%") | Persona.apellido.ilike(f"%{nombreOApellido}%")).all()
+            personasDB = sesion.query(Persona).filter(Persona.estaOculto == False).filter((Persona.nombre.ilike(f"%{nombreOApellido}%")) | (Persona.apellido.ilike(f"%{nombreOApellido}%"))).all()
 
             if len(personasDB) == 0:
                 return {"message": "No se han encontrado personas con ese nombre y apellido"}
