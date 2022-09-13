@@ -15,7 +15,7 @@ class contactoJson (BaseModel):
     valor: str
 
 
-@app.get("/")
+@app.get("/personas")
 async def getAllPersonas():
     try:
         session = Session(bind=engine)
