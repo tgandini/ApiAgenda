@@ -17,7 +17,7 @@ class contactoJson (BaseModel):
 
 #add telefono a persona por idpersona ingresados por json
 @router.put("/agregarTelefono")
-async def agregarTelefono(contacto: contactoJson):
+async def agregar_telefono(contacto: contactoJson):
     try:
         with Session(engine) as sesion:            
             personaDB = sesion.query(Persona).filter(Persona.id == contacto.idPersona).first()
@@ -40,7 +40,7 @@ async def agregarTelefono(contacto: contactoJson):
         return {"error" : str(e)}
 
 @router.put("/agregarDireccion")
-async def agregarDireccion(contacto: contactoJson):
+async def agregar_direccion(contacto: contactoJson):
     try:
         with Session(engine) as sesion:            
             personaDB = sesion.query(Persona).filter(Persona.id == contacto.idPersona).first()
@@ -63,7 +63,7 @@ async def agregarDireccion(contacto: contactoJson):
         return {"error" : str(e)}
 
 @router.delete("/{idContacto}")
-async def eliminarContacto(idContacto: int):
+async def eliminar_contacto(idContacto: int):
     try:
         with Session(engine) as sesion:
             contactoDB = sesion.query(Contacto).filter(Contacto.id == idContacto).first()

@@ -16,7 +16,7 @@ class personaJson (BaseModel):
     apellido: str
 
 @router.get("/")
-async def getAllPersonas():
+async def get_todas_las_personas():
     try:
         session = Session(bind=engine)
         personas = session.query(PersonaDB).filter(PersonaDB.estaOculto == False).all()
@@ -26,7 +26,7 @@ async def getAllPersonas():
         return {"error": str(e)}
 
 @router.put("/")
-async def crearPersona(persona: personaJson):
+async def crear_persona(persona: personaJson):
     try:
         with Session(engine) as sesion:
             from Models.Persona import Persona
@@ -48,7 +48,7 @@ async def crearPersona(persona: personaJson):
 
 #get personas por nombre o apellido
 @router.get("/{nombreOApellido}")
-async def getPersona(nombreOApellido):
+async def get_persona(nombreOApellido):
     try:
         with Session(engine) as sesion:
             from Models.Persona import Persona
@@ -71,7 +71,7 @@ async def getPersona(nombreOApellido):
         return {"error" : str(e)}
 
 @router.delete("/{idPersona}")
-async def eliminarPersona(idPersona: int):
+async def eliminar_persona(idPersona: int):
     try:
         with Session(engine) as sesion:
             personaDB = sesion.query(PersonaDB).filter(PersonaDB.id == idPersona).first()
