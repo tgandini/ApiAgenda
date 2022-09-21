@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from sqlalchemy.orm import Session
 from bbdd import engine
-from Routers import Persona, Contacto, Multiprocesamiento
+from Routers import Auth, Persona, Contacto, Multiprocesamiento
 
 tags_metadata = [
     {
@@ -19,6 +19,7 @@ tags_metadata = [
 ]
 
 app = FastAPI(openapi_tags=tags_metadata)
+app.include_router(Auth.router)
 app.include_router(Persona.router)
 app.include_router(Contacto.router)
 app.include_router(Multiprocesamiento.router)

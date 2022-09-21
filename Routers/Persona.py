@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 from bbdd import engine
 from Models.Persona import Persona as PersonaDB
 from pydantic import BaseModel
+from fastapi import Depends
+from .Auth import checkear_logueo
 
 
 router = APIRouter(
@@ -16,21 +18,22 @@ class personaJson (BaseModel):
     apellido: str
 
 @router.get("/")
-async def get_todas_las_personas():
+async def get_todas_las_personas(user: str = Depends(checkear_logueo)):
+    usuarioLogueado= user
     try:
         session = Session(bind=engine)
         personas = session.query(PersonaDB).filter(PersonaDB.estaOculto == False).all()
         session.close()
         return personas
     except Exception as e:
+        
         return {"error": str(e)}
 
 @router.put("/")
-async def crear_persona(persona: personaJson):
+async def crear_persona(persona: personaJson, user: str = Depends(checkear_logueo)):
     try:
         with Session(engine) as sesion:
             from Models.Persona import Persona
-            
             persona.nombre = persona.nombre.title()
             persona.apellido = persona.apellido.title()
             personaDB = Persona(nombre=persona.nombre, apellido=persona.apellido)
@@ -48,7 +51,7 @@ async def crear_persona(persona: personaJson):
 
 #get personas por nombre o apellido
 @router.get("/{nombreOApellido}")
-async def get_persona(nombreOApellido):
+async def get_persona(nombreOApellido, user: str = Depends(checkear_logueo)):
     try:
         with Session(engine) as sesion:
             from Models.Persona import Persona
@@ -71,7 +74,7 @@ async def get_persona(nombreOApellido):
         return {"error" : str(e)}
 
 @router.delete("/{idPersona}")
-async def eliminar_persona(idPersona: int):
+async def eliminar_persona(idPersona: int, user: str = Depends(checkear_logueo)):
     try:
         with Session(engine) as sesion:
             personaDB = sesion.query(PersonaDB).filter(PersonaDB.id == idPersona).first()
