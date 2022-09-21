@@ -4,6 +4,8 @@ from Models.Persona import Persona
 from Models.Contacto import Contacto
 from bbdd import engine
 from sqlalchemy.orm import Session
+from fastapi import Depends
+from .Auth import checkear_logueo
 
 
 router = APIRouter(
@@ -17,7 +19,7 @@ class contactoJson (BaseModel):
 
 #add telefono a persona por idpersona ingresados por json
 @router.put("/agregarTelefono")
-async def agregar_telefono(contacto: contactoJson):
+async def agregar_telefono(contacto: contactoJson, user: str = Depends(checkear_logueo)):
     try:
         with Session(engine) as sesion:            
             personaDB = sesion.query(Persona).filter(Persona.id == contacto.idPersona).first()
@@ -40,7 +42,7 @@ async def agregar_telefono(contacto: contactoJson):
         return {"error" : str(e)}
 
 @router.put("/agregarDireccion")
-async def agregar_direccion(contacto: contactoJson):
+async def agregar_direccion(contacto: contactoJson, user: str = Depends(checkear_logueo)):
     try:
         with Session(engine) as sesion:            
             personaDB = sesion.query(Persona).filter(Persona.id == contacto.idPersona).first()
@@ -63,7 +65,7 @@ async def agregar_direccion(contacto: contactoJson):
         return {"error" : str(e)}
 
 @router.delete("/{idContacto}")
-async def eliminar_contacto(idContacto: int):
+async def eliminar_contacto(idContacto: int, user: str = Depends(checkear_logueo)):
     try:
         with Session(engine) as sesion:
             contactoDB = sesion.query(Contacto).filter(Contacto.id == idContacto).first()
